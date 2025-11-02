@@ -1,72 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Artsy</title>
   <style>
     body {
-      margin: 0;
+      background: #fafafa;
       display: flex;
       flex-direction: column;
       align-items: center;
-      background-color: #fafafa;
-      font-family: Arial, sans-serif;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
     }
-    h1 { margin: 20px; }
+
+    h1 {
+      color: #444;
+      margin-bottom: 20px;
+    }
+
     canvas {
-      border: 2px solid #000;
-      background-color: white;
+      border: 2px solid #222;
+      border-radius: 10px;
       cursor: crosshair;
-    }
-    .toolbar {
-      margin-bottom: 10px;
-    }
-    input[type="color"], input[type="range"] {
-      margin: 0 5px;
     }
   </style>
 </head>
 <body>
-  <h1>🎨 Artsy</h1>
-  <div class="toolbar">
-    <input type="color" id="colorPicker" value="#000000">
-    <input type="range" id="brushSize" min="1" max="30" value="5">
-    <button id="clearBtn">Clear</button>
-  </div>
-  <canvas id="canvas" width="700" height="500"></canvas>
+  <h1>🎨 Artsy – Draw What You Want!</h1>
+  <canvas id="draw" width="800" height="500"></canvas>
 
   <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let painting = false;
+    const canvas = document.getElementById("draw");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
 
-    function startPosition(e) {
-      painting = true;
-      draw(e);
-    }
-    function endPosition() {
-      painting = false;
-      ctx.beginPath();
-    }
+    canvas.addEventListener("mousedown", () => drawing = true);
+    canvas.addEventListener("mouseup", () => drawing = false);
+    canvas.addEventListener("mousemove", draw);
+
     function draw(e) {
-      if (!painting) return;
-      ctx.lineWidth = document.getElementById('brushSize').value;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = document.getElementById('colorPicker').value;
-      ctx.lineTo(e.offsetX, e.offsetY);
-      ctx.stroke();
+      if (!drawing) return;
+      ctx.fillStyle = "black";
       ctx.beginPath();
-      ctx.moveTo(e.offsetX, e.offsetY);
+      ctx.arc(e.offsetX, e.offsetY, 4, 0, Math.PI * 2);
+      ctx.fill();
     }
-
-    canvas.addEventListener('mousedown', startPosition);
-    canvas.addEventListener('mouseup', endPosition);
-    canvas.addEventListener('mousemove', draw);
-
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    });
   </script>
 </body>
 </html>
